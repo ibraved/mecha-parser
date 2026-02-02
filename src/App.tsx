@@ -9,13 +9,14 @@ import { getMechaName } from "@/lib/mechaNames";
 import { cn } from "@/lib/utils";
 
 import { TitleBar } from "@/components/TitleBar";
+import heroBg from "@/assets/library_hero_2x.jpg";
 
 function Shell({ children }: { children: React.ReactNode }) {
   const tracker = useTracker();
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-background text-foreground">
+    <div className="relative flex h-screen flex-col overflow-hidden bg-background text-foreground">
       <TitleBar />
-      <div className="flex-1 overflow-y-auto no-scrollbar">
+      <div className="relative z-10 flex-1 overflow-y-auto no-scrollbar">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-8">
           <header className="flex items-center justify-between">
             <div className="flex flex-col">
@@ -51,6 +52,17 @@ function Shell({ children }: { children: React.ReactNode }) {
           </header>
           {children}
         </div>
+      </div>
+      <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-[500px] w-full overflow-hidden">
+        <img
+          src={heroBg}
+          alt=""
+          className="h-full w-full object-cover opacity-20"
+          style={{
+            maskImage: 'linear-gradient(to top, black, transparent)',
+            WebkitMaskImage: 'linear-gradient(to top, black, transparent)'
+          }}
+        />
       </div>
     </div>
   );
