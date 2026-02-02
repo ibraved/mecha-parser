@@ -1,6 +1,6 @@
 {
   "productName": "Mecha Parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "identifier": "com.ibraved.mechaparser",
   "build": {
     "beforeDevCommand": "npm run dev -- --port 1420",

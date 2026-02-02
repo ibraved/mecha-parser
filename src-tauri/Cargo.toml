@@ -1,6 +1,6 @@
 [package]
 name = "mecha-parser"
-version = "0.1.0"
+version = "0.1.1"
 description = "MechaBREAK roster tracker"
 authors = ["Ibraved"]
 edition = "2021"
