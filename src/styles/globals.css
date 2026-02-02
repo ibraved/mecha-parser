@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tasteful sci‑fi / industrial dark theme (original, not game assets). */
+:root {
+  --background: 222 21% 7%;
+  --foreground: 210 40% 98%;
+
+  --card: 222 21% 9%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222 21% 9%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 196 95% 55%;
+  --primary-foreground: 222 21% 10%;
+
+  --secondary: 220 14% 16%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 220 14% 16%;
+  --muted-foreground: 215 16% 65%;
+
+  --accent: 220 14% 16%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 78% 55%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 220 14% 18%;
+  --input: 220 14% 18%;
+  --ring: 196 95% 55%;
+
+  --radius: 12px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: radial-gradient(1200px 600px at 10% 0%, rgba(0, 180, 255, 0.12), transparent 60%),
+    radial-gradient(900px 600px at 90% 20%, rgba(255, 80, 120, 0.08), transparent 55%),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+

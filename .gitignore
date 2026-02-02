@@ -1,0 +1,15 @@
+# Local AI notes (do not commit)
+/claude.md
+
+# Local runtime bundle / launchers (do not commit)
+/Mecha Break Tracker/
+/Start.bat
+
+# Node
+/node_modules/
+/dist/
+
+# Rust
+/src-tauri/target/
+
+/log_example

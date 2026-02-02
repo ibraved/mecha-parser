@@ -1,0 +1,5 @@
+2026-02-01 12:00:00 [frame=123] UIWarPreparePlayer.cs playerId : 111, displayName : Alice, mechaId : 100020, pilotId : 1, ready : true
+2026-02-01 12:00:01 [frame=124] OnEmBattleReadyStateNotice playerId: 111 ready: false
+2026-02-01 12:00:02 [frame=125] UIWarPreparePlayer.cs playerId : 222, displayName : Bob 选择机甲[100021]
+2026-02-01 12:00:03 [frame=126] VoiceRouteManager EnterWarVoiceRoom msg=[{"campId":1,"campPlayers":[{"playerId":"111","playerName":"Alice","isAi":false,"mechaIdSelected":100020,"campId":1}]},{"campId":2,"campPlayers":[{"playerId":"333","playerName":"Bot-X","isAi":true,"mechaIdSelected":100005,"campId":2}]}]
+2026-02-01 12:00:04 [frame=127] GAME_S2C_QUERY_COMBAT_RECORD_RESULT

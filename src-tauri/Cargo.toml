@@ -1,0 +1,23 @@
+[package]
+name = "mecha-parser"
+version = "0.1.0"
+description = "MechaBREAK roster tracker"
+authors = ["Ibraved"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+anyhow = "1"
+indexmap = "2"
+once_cell = "1"
+regex = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sysinfo = "0.30"
+tauri = { version = "2", features = [] }
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
