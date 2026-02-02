@@ -6,98 +6,157 @@ import { useConfig } from "@/hooks/useConfig";
 import type { Player } from "@/types";
 import { About } from "@/components/About";
 import { getMechaName } from "@/lib/mechaNames";
+import { cn } from "@/lib/utils";
+
+import { TitleBar } from "@/components/TitleBar";
 
 function Shell({ children }: { children: React.ReactNode }) {
   const tracker = useTracker();
   return (
-    <div className="min-h-full">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-6">
-        <header className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <div className="text-sm uppercase tracking-widest text-muted-foreground">
-              Mecha Parser
+    <div className="flex h-screen flex-col overflow-hidden bg-background text-foreground">
+      <TitleBar />
+      <div className="flex-1 overflow-y-auto no-scrollbar">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-8">
+          <header className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <div className="text-xl font-semibold">Roster Monitor</div>
             </div>
-            <div className="text-xl font-semibold">Roster Monitor</div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="mr-3 text-xs text-muted-foreground">
-              {tracker.isTauri ? (
-                tracker.status.tracking ? (
-                  <span>Tracking</span>
+            <div className="flex items-center gap-2">
+              <div className="mr-3 text-xs text-muted-foreground">
+                {tracker.isTauri ? (
+                  tracker.status.tracking ? (
+                    <span>Tracking</span>
+                  ) : (
+                    <span>Idle</span>
+                  )
                 ) : (
-                  <span>Idle</span>
-                )
-              ) : (
-                <span>Web preview (run via Tauri to track)</span>
-              )}
+                  <span>Web preview (run via Tauri to track)</span>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                disabled={!tracker.isTauri || tracker.status.tracking}
+                onClick={tracker.startTracking}
+              >
+                Start
+              </Button>
+              <Button
+                variant="secondary"
+                disabled={!tracker.isTauri || !tracker.status.tracking}
+                onClick={tracker.stopTracking}
+              >
+                Stop
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              disabled={!tracker.isTauri || tracker.status.tracking}
-              onClick={tracker.startTracking}
-            >
-              Start
-            </Button>
-            <Button
-              variant="secondary"
-              disabled={!tracker.isTauri || !tracker.status.tracking}
-              onClick={tracker.stopTracking}
-            >
-              Stop
-            </Button>
-          </div>
-        </header>
-        {children}
+          </header>
+          {children}
+        </div>
       </div>
     </div>
   );
 }
 
-function TeamTable({ title, players }: { title: string; players: Player[] }) {
+interface TeamTableProps {
+  title: string;
+  players: Player[];
+  variant?: "blue" | "red" | "neutral";
+}
+
+function TeamTable({ title, players, variant = "neutral" }: TeamTableProps) {
+  const variants = {
+    blue: {
+      container: "from-blue-500/10 to-transparent border-blue-500/20 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)]",
+      header: "border-blue-500/20 bg-blue-500/5 text-blue-100",
+      title: "text-blue-400",
+      row: "hover:bg-blue-500/5",
+    },
+    red: {
+      container: "from-red-600/10 to-transparent border-red-600/20 shadow-[0_0_15px_-3px_rgba(220,38,38,0.3)]",
+      header: "border-red-600/20 bg-red-600/5 text-red-100",
+      title: "text-red-400",
+      row: "hover:bg-red-600/5",
+    },
+    neutral: {
+      container: "bg-card/60 backdrop-blur border-border",
+      header: "",
+      title: "text-foreground",
+      row: "",
+    },
+  };
+
+  const theme = variants[variant];
+
+  // For blue/red, we use a gradient background. For neutral, we keep the original card look.
+  const containerClass = cn(
+    "rounded-xl border p-4 transition-all duration-300",
+    variant !== "neutral" ? "bg-gradient-to-b backdrop-blur-sm" : "",
+    theme.container
+  );
+
   return (
-    <div className="rounded-xl border border-border bg-card/60 p-4 backdrop-blur">
-      <div className="mb-3 flex items-baseline justify-between">
-        <div className="text-sm font-semibold">{title}</div>
+    <div className={containerClass}>
+      <div className="mb-3 flex items-baseline justify-between px-1">
+        <div className={cn("text-sm font-semibold uppercase tracking-wider", theme.title)}>
+          {title}
+        </div>
         <div className="text-xs text-muted-foreground">{players.length} players</div>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Player</TableHead>
-            <TableHead>Mecha</TableHead>
-            <TableHead>AI</TableHead>
-            <TableHead>Ready</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {players.map((p) => {
-            const name = p.displayName ?? `Player ${p.playerId}`;
-            const ai = p.isAi;
-            const ready = p.ready;
-            const nameClass =
-              ai === true ? "text-red-300" : ai === undefined ? "text-yellow-200" : "text-foreground";
-            return (
-              <TableRow key={p.playerId}>
-                <TableCell className={nameClass}>{name}</TableCell>
-                <TableCell className="text-muted-foreground">
-                  {getMechaName(p.mechaId)}
-                </TableCell>
-                <TableCell className="text-muted-foreground">{ai === true ? "Yes" : ai === false ? "No" : "-"}</TableCell>
-                <TableCell className="text-muted-foreground">
-                  {ready === true ? "Yes" : ready === false ? "No" : "-"}
+      <div className="overflow-hidden rounded-lg border border-border/50">
+        <Table>
+          <TableHeader className={cn("bg-muted/50", theme.header)}>
+            <TableRow className="border-border/50 hover:bg-transparent">
+              <TableHead className="w-[30%]">Player</TableHead>
+              <TableHead className="w-[30%]">Mecha</TableHead>
+              <TableHead className="w-[20%] text-center">AI</TableHead>
+              <TableHead className="w-[20%] text-right">Ready</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {players.map((p) => {
+              const name = p.displayName ?? `Player ${p.playerId}`;
+              const ai = p.isAi;
+              const ready = p.ready;
+              // Specific styling for ready/AI status
+              const nameClass =
+                ai === true
+                  ? "text-red-300 font-medium"
+                  : ai === undefined
+                    ? "text-yellow-200"
+                    : "text-foreground font-medium";
+
+              return (
+                <TableRow key={p.playerId} className={cn("border-border/50", theme.row)}>
+                  <TableCell className={nameClass}>{name}</TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {getMechaName(p.mechaId)}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground text-center">
+                    {ai === true ? "Yes" : ai === false ? "No" : "-"}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {ready === true ? (
+                      <span className="inline-flex items-center rounded-sm bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-500/20">
+                        READY
+                      </span>
+                    ) : ready === false ? (
+                      <span className="text-muted-foreground">-</span>
+                    ) : (
+                      "-"
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            {players.length === 0 ? (
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  Waiting for players...
                 </TableCell>
               </TableRow>
-            );
-          })}
-          {players.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={4} className="text-muted-foreground">
-                No players yet.
-              </TableCell>
-            </TableRow>
-          ) : null}
-        </TableBody>
-      </Table>
+            ) : null}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
@@ -117,8 +176,8 @@ export default function App() {
 
         <TabsContent value="roster">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <TeamTable title="Team 1" players={teams.team1} />
-            <TeamTable title="Team 2" players={teams.team2} />
+            <TeamTable title="Team 1" players={teams.team1} variant="blue" />
+            <TeamTable title="Team 2" players={teams.team2} variant="red" />
           </div>
           {teams.unassigned.length ? (
             <div className="mt-4">

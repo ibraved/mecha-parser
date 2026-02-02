@@ -48,17 +48,10 @@ fn set_and_emit_status(ctrl: &TrackerController, app: &AppHandle, status: Tracke
   if let Ok(mut guard) = ctrl.status.lock() {
     *guard = status.clone();
   }
-  eprintln!("[emit] Emitting {} with tracking={}", EVT_TRACKER_STATUS, status.tracking);
-  match app.emit(EVT_TRACKER_STATUS, status) {
-    Ok(_) => eprintln!("[emit] Event sent successfully"),
-    Err(e) => eprintln!("[emit] Event failed: {:?}", e),
-  }
+  let _ = app.emit(EVT_TRACKER_STATUS, status);
 }
 
 fn emit_snapshot(app: &AppHandle, snapshot: RosterSnapshot) {
-  eprintln!("[emit] Emitting {} v{} with {} team1, {} team2", 
-    EVT_ROSTER_SNAPSHOT, snapshot.version, 
-    snapshot.teams.team1.len(), snapshot.teams.team2.len());
   let _ = app.emit(EVT_ROSTER_SNAPSHOT, snapshot);
 }
 

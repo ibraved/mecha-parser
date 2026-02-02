@@ -18,7 +18,9 @@
         "title": "Mecha Parser",
         "width": 1080,
         "height": 720,
-        "resizable": true
+        "resizable": true,
+        "decorations": false,
+        "shadow": true
       }
     ]
   },
